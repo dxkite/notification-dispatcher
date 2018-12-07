@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">收款监控</string>
+    <string name="params_setting">设置参数</string>
+    <string name="start">启动</string>
+    <string name="system_setting">系统设置</string>
+    <string name="secret">推送Secret，Payment-Secret</string>
+    <string name="token">推送Token，Payment-Token</string>
+    <string name="url">推送地址URL</string>
+    <string name="payment_listening">收费通知正在监控中</string>
+    <string name="payment_notification">收费通知</string>
+    <string name="setting_save_success">设置保存成功</string>
+    <string name="please_grant_permission">请授权通知读取权限</string>
+    <string name="ok">好的</string>
+    <string name="need_permission">应用需要开启授权才能使用</string>
+    <string name="grant_notice">授权通知</string>
+    <string name="payment_is_listening">收款通知正在监控中</string>
+</resources>
