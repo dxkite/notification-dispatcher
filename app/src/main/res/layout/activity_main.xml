@@ -16,7 +16,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <EditText
                 android:id="@+id/request_url"
@@ -43,6 +45,25 @@
                 android:hint="@string/secret"
                 android:inputType="text"
                 android:singleLine="true" />
+
+            <Switch
+                android:id="@+id/weekup_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:clickable="true"
+                android:text="@string/timing_week_up" />
+
+            <Switch
+                android:id="@+id/weekup_boot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:clickable="true"
+                android:text="@string/week_up_on_boot" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -51,12 +72,16 @@
             android:orientation="horizontal">
 
 
-            <Button
-                android:id="@+id/params_setting"
+            <ToggleButton
+                android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/params_setting" />
+                android:text="ToggleButton"
+                android:textOff="@string/setting_start"
+                android:textOn="@string/stop" />
+
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

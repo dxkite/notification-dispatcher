@@ -13,7 +13,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import cn.dxkite.notificationdispatcher.R;
 import cn.dxkite.notificationdispatcher.service.NotificationListener;
@@ -22,28 +24,40 @@ import cn.dxkite.notificationdispatcher.utils.ServiceUtils;
 public class MainActivity extends AppCompatActivity {
 
     EditText textUrl, textToken, textSecret;
+    Switch timing,booting;
+
     final static String TAG = "Notification";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button start = findViewById(R.id.params_setting);
+        final ToggleButton start = findViewById(R.id.start);
 
         textUrl = findViewById(R.id.request_url);
         textToken = findViewById(R.id.request_token);
         textSecret = findViewById(R.id.request_secret);
+        timing = findViewById(R.id.weekup_time);
+        booting = findViewById(R.id.weekup_boot);
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences preferences = getApplicationContext().getSharedPreferences("config", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("url", textUrl.getText().toString());
-                editor.putString("token", textToken.getText().toString());
-                editor.putString("secret", textSecret.getText().toString());
-                editor.apply();
-                Toast.makeText(getApplicationContext(), R.string.setting_save_success, Toast.LENGTH_SHORT).show();
+                if (start.isChecked()) {
+                    SharedPreferences preferences = getApplicationContext().getSharedPreferences("config", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("url", textUrl.getText().toString());
+                    editor.putString("token", textToken.getText().toString());
+                    editor.putString("secret", textSecret.getText().toString());
+                    editor.putBoolean("booting", booting.isChecked());
+                    editor.putBoolean("timing",timing.isChecked());
+                    editor.apply();
+                    Toast.makeText(getApplicationContext(), R.string.starting_service, Toast.LENGTH_SHORT).show();
+                    startListener();
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.stopping_service, Toast.LENGTH_SHORT).show();
+                    stopListener();
+                }
             }
         });
 
@@ -51,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         textUrl.setText(preference.getString("url", "http://192.168.0.109/paymentCallback"));
         textToken.setText(preference.getString("token", "dxkite"));
         textSecret.setText(preference.getString("secret", "dxkite"));
+        booting.setChecked(preference.getBoolean("booting",true));
+        timing.setChecked(preference.getBoolean("timing",true));
 
         if (!isNotificationEnabled()) {
             new AlertDialog.Builder(this)
@@ -67,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
-        startListener();
+        start.setChecked(ServiceUtils.isServiceRunning(this, NotificationListener.class));
     }
 
 
@@ -87,7 +103,15 @@ public class MainActivity extends AppCompatActivity {
             startService(start);
         }
     }
-
+    public void stopListener() {
+        if (ServiceUtils.isServiceRunning(this, NotificationListener.class)) {
+            Intent start = new Intent(this, NotificationListener.class);
+            Log.e(TAG, "staop service");
+            stopService(start);
+        } else {
+            Log.e(TAG, "service is running");
+        }
+    }
     //退出时的时间
     private long mExitTime;
     //对返回键进行监听
