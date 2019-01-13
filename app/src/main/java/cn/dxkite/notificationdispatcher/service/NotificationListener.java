@@ -1,6 +1,9 @@
 package cn.dxkite.notificationdispatcher.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -11,19 +14,46 @@ import cn.dxkite.notificationdispatcher.R;
 
 public class NotificationListener extends NotificationListenerService {
     final static String TAG = "NotificationListener";
+    final static String CHANNEL_ID = "dxkite";
+
     final static int notificationId = 1000;
 
     @Override
     public void onCreate() {
-        Notification notification = new Notification.Builder(getApplicationContext())
+        Log.d(TAG, "onCreate");
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = null;
+        Notification.Builder builder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(CHANNEL_ID, "dxkite", NotificationManager.IMPORTANCE_HIGH);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+            builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
+        } else {
+            builder = new Notification.Builder(getApplicationContext());
+        }
+        Notification notification = builder
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(getString(R.string.payment_is_listening))
                 .setContentTitle(getString(R.string.app_name))
                 .build();
-        notification.flags|=Notification.FLAG_NO_CLEAR;
-        notification.flags|=Notification.FLAG_ONGOING_EVENT;
-        startForeground(notificationId,notification);
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        startForeground(notificationId, notification);
         super.onCreate();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(notificationId);
+            Log.d(TAG,"cancel notification");
+        }
+        super.onDestroy();
     }
 
     @Override

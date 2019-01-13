@@ -78,8 +78,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="ToggleButton"
-                android:textOff="@string/setting_start"
+                android:textOff="@string/start"
                 android:textOn="@string/stop" />
+
+            <Button
+                android:id="@+id/apply_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/setting_parameter" />
 
         </LinearLayout>
     </LinearLayout>

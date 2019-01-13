@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">收款监控</string>
-    <string name="setting_start">设置参数并启动</string>
+    <string name="start">启动监控服务</string>
+    <string name="setting_parameter">设置参数</string>
     <string name="stop">关闭监控服务</string>
     <string name="system_setting">系统设置</string>
     <string name="secret">推送Secret，Payment-Secret</string>

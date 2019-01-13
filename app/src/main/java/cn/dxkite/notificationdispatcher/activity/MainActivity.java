@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     EditText textUrl, textToken, textSecret;
     Switch timing,booting;
+    Button apply;
+    ToggleButton start;
 
     final static String TAG = "Notification";
 
@@ -32,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ToggleButton start = findViewById(R.id.start);
 
+        start = findViewById(R.id.start);
+        apply = findViewById(R.id.apply_setting);
         textUrl = findViewById(R.id.request_url);
         textToken = findViewById(R.id.request_token);
         textSecret = findViewById(R.id.request_secret);
@@ -44,20 +47,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (start.isChecked()) {
-                    SharedPreferences preferences = getApplicationContext().getSharedPreferences("config", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("url", textUrl.getText().toString());
-                    editor.putString("token", textToken.getText().toString());
-                    editor.putString("secret", textSecret.getText().toString());
-                    editor.putBoolean("booting", booting.isChecked());
-                    editor.putBoolean("timing",timing.isChecked());
-                    editor.apply();
                     Toast.makeText(getApplicationContext(), R.string.starting_service, Toast.LENGTH_SHORT).show();
                     startListener();
                 }else{
                     Toast.makeText(getApplicationContext(), R.string.stopping_service, Toast.LENGTH_SHORT).show();
                     stopListener();
                 }
+            }
+        });
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopListener();
+                start.setChecked(false);
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("config", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("url", textUrl.getText().toString());
+                editor.putString("token", textToken.getText().toString());
+                editor.putString("secret", textSecret.getText().toString());
+                editor.putBoolean("booting", booting.isChecked());
+                editor.putBoolean("timing",timing.isChecked());
+                editor.apply();
             }
         });
 
@@ -97,21 +108,22 @@ public class MainActivity extends AppCompatActivity {
         if (ServiceUtils.isServiceRunning(this, NotificationListener.class)) {
             Log.e(TAG, "service is running");
         } else {
-            Intent start = new Intent(this, NotificationListener.class);
-            start.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(this, NotificationListener.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Log.e(TAG, "start service");
-            startService(start);
+            startService(intent);
         }
     }
     public void stopListener() {
         if (ServiceUtils.isServiceRunning(this, NotificationListener.class)) {
-            Intent start = new Intent(this, NotificationListener.class);
-            Log.e(TAG, "staop service");
-            stopService(start);
+            Intent intent = new Intent(this, NotificationListener.class);
+            Log.e(TAG, "stop service");
+            stopService(intent);
         } else {
-            Log.e(TAG, "service is running");
+            Log.e(TAG, "service is stopped");
         }
     }
+
     //退出时的时间
     private long mExitTime;
     //对返回键进行监听
