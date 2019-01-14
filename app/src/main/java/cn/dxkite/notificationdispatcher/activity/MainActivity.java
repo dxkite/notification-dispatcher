@@ -19,6 +19,7 @@ import android.widget.ToggleButton;
 
 import cn.dxkite.notificationdispatcher.R;
 import cn.dxkite.notificationdispatcher.service.NotificationListener;
+import cn.dxkite.notificationdispatcher.utils.ExtraConfig;
 import cn.dxkite.notificationdispatcher.utils.ServiceUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Switch timing,booting;
     Button apply;
     ToggleButton start;
+    ExtraConfig config;
 
     final static String TAG = "Notification";
 
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        config = new ExtraConfig(getSharedPreferences("config", MODE_PRIVATE), getIntent().getData());
 
         start = findViewById(R.id.start);
         apply = findViewById(R.id.apply_setting);
@@ -73,12 +77,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences preference = getSharedPreferences("config", MODE_PRIVATE);
-        textUrl.setText(preference.getString("url", "http://192.168.0.109/paymentCallback"));
-        textToken.setText(preference.getString("token", "dxkite"));
-        textSecret.setText(preference.getString("secret", "dxkite"));
-        booting.setChecked(preference.getBoolean("booting",true));
-        timing.setChecked(preference.getBoolean("timing",true));
+        textUrl.setText(config.getString("url", "http://192.168.31.50/paymentCallback"));
+        textToken.setText(config.getString("token", "dxkite"));
+        textSecret.setText(config.getString("secret", "dxkite"));
+        booting.setChecked(config.getBoolean("booting",true));
+        timing.setChecked(config.getBoolean("timing",true));
 
         if (!isNotificationEnabled()) {
             new AlertDialog.Builder(this)
@@ -97,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         }
         start.setChecked(ServiceUtils.isServiceRunning(this, NotificationListener.class));
     }
-
 
     public boolean isNotificationEnabled() {
         String names = Settings.Secure.getString(getApplicationContext().getContentResolver(), "enabled_notification_listeners");
