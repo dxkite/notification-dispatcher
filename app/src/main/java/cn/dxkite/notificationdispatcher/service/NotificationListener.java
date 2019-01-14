@@ -19,7 +19,7 @@ public class NotificationListener extends NotificationListenerService {
     final static String TAG = "NotificationListener";
     final static String CHANNEL_ID = "dxkite";
 
-    final static int notificationId = 1000;
+    final static int notificationId = 990602;
 
     @Override
     public void onCreate() {

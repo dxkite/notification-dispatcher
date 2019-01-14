@@ -7,6 +7,7 @@
 ## TODO
 
 - [x] 监控并推送支付宝微信通知内容
+- [x] URL [启动](http://app.dxkite.cn/notification-dispatcher/launcher)
 - [ ] 开机自启
 - [ ] 定时唤醒
 - [ ] 收费历史记录
@@ -15,6 +16,10 @@
 ## 原理
 
 监控手机通知，推送消息到服务器  
+
+## URI 启动
+- http://app.dxkite.cn/notification-dispatcher/launcher
+- dxkite://notification-dispatcher/launcher
 
 ## 注意
 
