@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.putBoolean("booting", booting.isChecked());
                 editor.putBoolean("timing",timing.isChecked());
                 editor.apply();
+                Toast.makeText(MainActivity.this, "参数设置成功", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -106,21 +107,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void startListener() {
         if (ServiceUtils.isServiceRunning(this, NotificationListener.class)) {
-            Log.e(TAG, "service is running");
+            Log.d(TAG, "service is already running");
         } else {
             Intent intent = new Intent(this, NotificationListener.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Log.e(TAG, "start service");
+            Log.d(TAG, "start service");
             startService(intent);
         }
     }
     public void stopListener() {
         if (ServiceUtils.isServiceRunning(this, NotificationListener.class)) {
             Intent intent = new Intent(this, NotificationListener.class);
-            Log.e(TAG, "stop service");
+            Log.d(TAG, "stop service");
             stopService(intent);
         } else {
-            Log.e(TAG, "service is stopped");
+            Log.d(TAG, "service is already stopped");
         }
     }
 

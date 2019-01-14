@@ -3,7 +3,9 @@ package cn.dxkite.notificationdispatcher.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -11,6 +13,7 @@ import android.util.Log;
 
 import cn.dxkite.notificationdispatcher.Message;
 import cn.dxkite.notificationdispatcher.R;
+import cn.dxkite.notificationdispatcher.activity.MainActivity;
 
 public class NotificationListener extends NotificationListenerService {
     final static String TAG = "NotificationListener";
@@ -33,7 +36,12 @@ public class NotificationListener extends NotificationListenerService {
         } else {
             builder = new Notification.Builder(getApplicationContext());
         }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
         Notification notification = builder
+                .setContentIntent(pendingIntent)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(getString(R.string.payment_is_listening))
                 .setContentTitle(getString(R.string.app_name))
