@@ -18,4 +18,6 @@
     <string name="payment_is_listening">收款通知正在监控中</string>
     <string name="week_up_on_boot">开机启动</string>
     <string name="timing_week_up">定时唤醒</string>
+    <string name="generate_notification">生成通知</string>
+    <string name="debug">调试</string>
 </resources>

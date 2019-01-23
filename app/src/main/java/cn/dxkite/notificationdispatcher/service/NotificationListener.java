@@ -16,8 +16,8 @@ import cn.dxkite.notificationdispatcher.R;
 import cn.dxkite.notificationdispatcher.activity.MainActivity;
 
 public class NotificationListener extends NotificationListenerService {
-    final static String TAG = "NotificationListener";
-    final static String CHANNEL_ID = "dxkite";
+    public final static String TAG = "NotificationListener";
+    public final static String CHANNEL_ID = "dxkite";
 
     final static int notificationId = 990602;
 

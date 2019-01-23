@@ -1,6 +1,11 @@
 package cn.dxkite.notificationdispatcher.activity;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,8 +34,8 @@ import cn.dxkite.notificationdispatcher.utils.ServiceUtils;
 public class MainActivity extends AppCompatActivity {
 
     EditText textUrl, textToken, textSecret;
-    Switch timing,booting;
-    Button apply;
+    Switch timing,booting,debug;
+    Button apply,test;
     ToggleButton start;
     ExtraConfig config;
 
@@ -50,6 +55,48 @@ public class MainActivity extends AppCompatActivity {
         textSecret = findViewById(R.id.request_secret);
         timing = findViewById(R.id.weekup_time);
         booting = findViewById(R.id.weekup_boot);
+        debug = findViewById(R.id.debug);
+        test = findViewById(R.id.test);
+
+        debug.setChecked(true);
+        debug.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                test.setVisibility(isChecked?View.VISIBLE:View.GONE);
+            }
+        });
+
+        test.setOnClickListener(new View.OnClickListener() {
+            int id = 0;
+            @Override
+            public void onClick(View v) {
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationChannel channel = null;
+                Notification.Builder builder = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    channel = new NotificationChannel(NotificationListener.CHANNEL_ID, "dxkite", NotificationManager.IMPORTANCE_HIGH);
+                    if (notificationManager != null) {
+                        notificationManager.createNotificationChannel(channel);
+                    }
+                    builder = new Notification.Builder(getApplicationContext(), NotificationListener.CHANNEL_ID);
+                } else {
+                    builder = new Notification.Builder(getApplicationContext());
+                }
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+                Notification notification = builder
+                        .setContentIntent(pendingIntent)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentText("收到来自dxkite的1000万元")
+                        .setContentTitle("支付宝收款通知")
+                        .build();
+                NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                assert mNotificationManager != null;
+                mNotificationManager.notify(id++ , notification);
+            }
+        });
 
         CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -115,7 +162,9 @@ public class MainActivity extends AppCompatActivity {
 
         timing.setOnCheckedChangeListener(listener);
         booting.setOnCheckedChangeListener(listener);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            NotificationListenerService.requestRebind(new ComponentName(getPackageName(),NotificationListener.class.getName()));
+        }
     }
 
     public boolean isNotificationEnabled() {
