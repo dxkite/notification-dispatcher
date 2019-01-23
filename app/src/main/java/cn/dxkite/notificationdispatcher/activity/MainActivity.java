@@ -1,17 +1,21 @@
 package cn.dxkite.notificationdispatcher.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.service.notification.NotificationListenerService;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -46,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
         textSecret = findViewById(R.id.request_secret);
         timing = findViewById(R.id.weekup_time);
         booting = findViewById(R.id.weekup_boot);
+
+        CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                buttonView.setChecked(!isChecked);
+                Toast.makeText(MainActivity.this, "功能暂不支持", Toast.LENGTH_SHORT).show();
+            }
+        };
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +110,12 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
+
         start.setChecked(ServiceUtils.isServiceRunning(this, NotificationListener.class));
+
+        timing.setOnCheckedChangeListener(listener);
+        booting.setOnCheckedChangeListener(listener);
+
     }
 
     public boolean isNotificationEnabled() {

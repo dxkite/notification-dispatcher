@@ -36,7 +36,7 @@ public class ExtraConfig {
 
     public String getString(String name,String defValue) {
         if (uri != null && uri.getQueryParameter(name) != null) {
-                 return uri.getQueryParameter(name);
+            return uri.getQueryParameter(name);
         }
         if (sharedPreferences != null) {
             return sharedPreferences.getString(name,defValue);

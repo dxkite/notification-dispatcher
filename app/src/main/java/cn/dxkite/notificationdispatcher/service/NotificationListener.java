@@ -66,8 +66,8 @@ public class NotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        Log.d(TAG, "onNotificationPosted");
         String packageName = sbn.getPackageName();
+        Log.d(TAG, "on Notification Posted From:"+packageName);
         Message.Type type;
         if ("com.eg.android.AlipayGphone".equals(packageName)) {
             type = Message.Type.Alipay;
@@ -78,7 +78,6 @@ public class NotificationListener extends NotificationListenerService {
         }
         Notification notification = sbn.getNotification();
         Bundle bundle = notification.extras;
-        String title = bundle.getString(Notification.EXTRA_TITLE, "");
         Message message = new Message();
         message.from = bundle.getString(Notification.EXTRA_TITLE);
         message.content = bundle.getString(Notification.EXTRA_TEXT);
